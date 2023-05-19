@@ -1,7 +1,8 @@
 import React from 'react';
+import MainTemplate from './templates/MainTemplate';
 
 function App() {
-	return <h1>Content</h1>;
+	return <MainTemplate />;
 }
 
 export default App;
