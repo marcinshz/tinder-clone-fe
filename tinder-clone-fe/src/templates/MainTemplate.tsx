@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import './MainTemplate.scss';
+import TopBar from '../components/TopBar/TopBar';
 
-const MainTemplate: React.FC = () => {
+const MainTemplate: React.FC<PropsWithChildren> = ({ children }) => {
 	return (
 		<div className="wrapper">
-			<h1>Hello world</h1>
+			<TopBar />
+			{children}
 		</div>
 	);
 };

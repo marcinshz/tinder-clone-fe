@@ -5,4 +5,9 @@
     justify-content: center;
     align-items: center;
     background-color: var(--color-bg-light);
+    grid-template-columns: 1fr 350px;
+    grid-template-rows: var(--topbar-height) 1fr var(--actionbar-height);
+    grid-template-areas: "topbar topbar"
+                         "content sidebar"
+                         "actionbar actionbar";
 }
