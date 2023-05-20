@@ -1,0 +1,12 @@
+.actionbar-wrapper {
+    display: flex;
+    width: 100%;
+    height: var(--actionbar-height);
+    padding: var(--actionbar-padding);
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    grid-area: actionbar;
+    background-color: var(--topbar-color-bg-light);
+    box-shadow: 3px 3px 23px -14px rgba(66, 68, 90, 1);
+}
