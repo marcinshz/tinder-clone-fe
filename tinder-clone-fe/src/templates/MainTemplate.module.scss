@@ -8,6 +8,6 @@
     grid-template-columns: 1fr 350px;
     grid-template-rows: var(--topbar-height) 1fr var(--actionbar-height);
     grid-template-areas: "topbar topbar"
-                         "content sidebar"
+                         "content content"
                          "actionbar actionbar";
 }

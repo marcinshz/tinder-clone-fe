@@ -1,14 +1,14 @@
 import React, { PropsWithChildren } from 'react';
-import './MainTemplate.scss';
+import MaintemplateCSS from './MainTemplate.module.scss';
 import TopBar from '../components/TopBar/TopBar';
 
 const MainTemplate: React.FC<PropsWithChildren> = ({ children }) => {
-	return (
-		<div className="wrapper">
-			<TopBar />
-			{children}
-		</div>
-	);
+    return (
+        <div className={MaintemplateCSS.wrapper}>
+            <TopBar />
+            {children}
+        </div>
+    );
 };
 
 export default MainTemplate;

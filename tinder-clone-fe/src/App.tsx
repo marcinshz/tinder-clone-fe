@@ -1,9 +1,9 @@
-import React from "react";
-import MainTemplate from "./templates/MainTemplate";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Profile from "./pages/Profile/Profile";
-import Homepage from "./pages/Homepage/Homepage";
-import { usersList } from "./demodata";
+import React from 'react';
+import MainTemplate from './templates/MainTemplate';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Profile from './pages/Profile/Profile';
+import Homepage from './pages/Homepage/Homepage';
+import { usersList } from './demodata';
 
 function App() {
     const currentUser = usersList[0];

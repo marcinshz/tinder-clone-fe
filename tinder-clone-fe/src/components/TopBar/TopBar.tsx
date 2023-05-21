@@ -1,12 +1,12 @@
-import React from "react";
-import "./TopBar.scss";
-import { Button } from "primereact/button";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { Button } from 'primereact/button';
+import { useNavigate } from 'react-router-dom';
+import TopBarCSS from './TopBar.module.scss';
 
 const TopBar: React.FC = () => {
     const navigate = useNavigate();
     return (
-        <div className="topbar-wrapper">
+        <div className={TopBarCSS.wrapper}>
             <div className="logo">
                 <Button
                     rounded
@@ -14,10 +14,10 @@ const TopBar: React.FC = () => {
                     text
                     severity="help"
                     icon="pi pi-users"
-                    onClick={() => navigate("/")}
+                    onClick={() => navigate('/')}
                 />
             </div>
-            <div className="details">
+            <div className={TopBarCSS.details}>
                 <Button
                     severity="secondary"
                     type="button"
@@ -35,7 +35,7 @@ const TopBar: React.FC = () => {
                     raised
                     severity="secondary"
                     icon="pi pi-user"
-                    onClick={() => navigate("/profile")}
+                    onClick={() => navigate('/profile')}
                 />
                 <Button rounded text raised severity="secondary" icon="pi pi-sign-out" />
             </div>
