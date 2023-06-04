@@ -1,0 +1,20 @@
+.wrapper {
+    display: flex;
+    width: 100%;
+    height: var(--topbar-height);
+    padding: var(--topbar-padding);
+    align-items: center;
+    justify-content: space-between;
+    grid-area: topbar;
+    background-color: var(--topbar-color-bg-light);
+    box-shadow: 3px 3px 23px -14px rgba(66, 68, 90, 1);
+
+    .logo {
+        font-weight: var(--font-weight-bold);
+    }
+
+    .details {
+        display: flex;
+        gap: 1rem;
+    }
+}
