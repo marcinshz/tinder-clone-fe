@@ -1,18 +1,21 @@
-import React from 'react';
 import MainTemplate from './templates/MainTemplate';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Profile from './pages/Profile/Profile';
-import Homepage from './pages/Homepage/Homepage';
-import { usersList } from './demodata';
+import { useState } from 'react';
+import { User } from './model';
+import LoginPage from './pages/LoginPage/LoginPage';
+import UserAccessTemplate from './templates/UserAccessTemplate';
+import RegisterPage from './pages/RegisterPage/RegisterPage';
 
 function App() {
-    const currentUser = usersList[0];
+    const [user, setUser] = useState<User>();
+
     return (
         <BrowserRouter>
             <MainTemplate>
                 <Routes>
-                    <Route path="/" element={<Homepage />} />
-                    <Route path="/profile" element={<Profile user={currentUser} />} />
+                    <Route path="/register" element={<RegisterPage setUser={setUser} />} />
+                    <Route path="/login" element={<LoginPage setUser={setUser} />} />
+                    <Route path="/" element={<UserAccessTemplate user={user} />} />
                 </Routes>
             </MainTemplate>
         </BrowserRouter>

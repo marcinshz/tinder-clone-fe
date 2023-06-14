@@ -15,12 +15,12 @@
     "primereact": "^9.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.44.2",
+    "react-hook-form": "^7.44.3",
     "react-router-dom": "^6.11.2",
     "sass": "^1.62.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.0.1",
+    "@faker-js/faker": "^8.0.2",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
