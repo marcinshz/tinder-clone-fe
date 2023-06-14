@@ -13,7 +13,7 @@ const Profile: React.FC<ProfileProps> = ({ user }: { user: User }) => {
     return (
         <div className={ProfileCSS.wrapper}>
             <Avatar imageUrl={user.photo} name={user.firstName} />
-            <DetailsForm />
+            <DetailsForm user={user} />
         </div>
     );
 };

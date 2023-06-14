@@ -15,7 +15,7 @@ function App() {
                 <Routes>
                     <Route path="/register" element={<RegisterPage setUser={setUser} />} />
                     <Route path="/login" element={<LoginPage setUser={setUser} />} />
-                    <Route path="/" element={<UserAccessTemplate user={user} />} />
+                    <Route path="*" element={<UserAccessTemplate user={user} />} />
                 </Routes>
             </MainTemplate>
         </BrowserRouter>
