@@ -9,11 +9,12 @@ interface ProfileProps {
 }
 
 const Profile: React.FC<ProfileProps> = ({ user }: { user: User }) => {
-    console.log(user);
     return (
         <div className={ProfileCSS.wrapper}>
-            <Avatar imageUrl={user.photo} name={user.firstName} />
-            <DetailsForm />
+            {user ? <>
+                <Avatar imageUrl={user.photo} name={user.firstName} />
+                <DetailsForm />
+            </> : <></>}
         </div>
     );
 };

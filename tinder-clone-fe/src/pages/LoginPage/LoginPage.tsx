@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './LoginPage.scss'
 import { InputText } from 'primereact/inputtext'
 import { Password } from 'primereact/password'
@@ -7,7 +7,7 @@ import { Login } from '../../DataService'
 import { User } from '../../model'
 import { useNavigate } from 'react-router-dom'
 
-function LoginPage(props: { setUser: Function }) {
+function LoginPage(props: { setUser: Function, user: User | undefined }) {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [invalid, setInvalid] = useState(false)
@@ -26,12 +26,16 @@ function LoginPage(props: { setUser: Function }) {
             user = await Login(email, password)
             if (user) {
                 props.setUser(user);
-                navigate('/')
+                navigate('/swipes')
             }
             else setInvalid(true);
         }
         else setInvalid(true);
     }
+
+    useEffect(() => {
+        if(props.user)  navigate('/swipes')
+    },[props])
 
     return (
         <div className="login-page">

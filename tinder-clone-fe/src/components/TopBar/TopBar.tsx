@@ -34,6 +34,14 @@ const TopBar: React.FC = () => {
                     text
                     raised
                     severity="secondary"
+                    icon="pi pi-arrow-right-arrow-left"
+                    onClick={() => navigate('/swipes')}
+                />
+                <Button
+                    rounded
+                    text
+                    raised
+                    severity="secondary"
                     icon="pi pi-user"
                     onClick={() => navigate('/profile')}
                 />
