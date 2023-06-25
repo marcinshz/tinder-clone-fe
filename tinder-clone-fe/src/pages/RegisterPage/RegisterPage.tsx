@@ -17,6 +17,7 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Slider } from 'primereact/slider';
 
 import { Checkbox } from 'primereact/checkbox';
+import { User } from '../../model'
 
 
 const hobbyOptions = [
@@ -25,7 +26,7 @@ const hobbyOptions = [
 ]
 
 
-export default function RegisterPage(props: { setUser: Function }) {
+export default function RegisterPage(props: { setUser: Function, user: User | undefined }) {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [photo, setPhoto] = useState("https://png.pngtree.com/png-vector/20220608/ourmid/pngtree-unnamed-user-avatar-icon-profile-png-image_4816337.png")
@@ -79,7 +80,7 @@ export default function RegisterPage(props: { setUser: Function }) {
                     props.setUser({
                         email, password, photo, firstName, sex, birthDate, height, aboutMe, hobbies, city, job, education, instagram, facebook, showingGender, ageRange, showOnlyMyCity
                     })
-                    navigate('/')
+                    navigate('/profile')
                 }
                 else {
                     setShowError(true)
@@ -89,8 +90,8 @@ export default function RegisterPage(props: { setUser: Function }) {
     }
 
     useEffect(() => {
-        console.log(showError)
-    },[showError])
+        if(props.user)  navigate('/swipes')
+    },[props])
 
     const onUpload = () => { }
 
