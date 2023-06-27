@@ -5,19 +5,24 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Gender } from '../../model';
 import { classNames } from 'primereact/utils';
+import { User } from '../../model';
+import { Dropdown } from 'primereact/dropdown';
 
 interface UserProfileInfo {
     name: string;
-    age: number;
-    sex: Gender;
-    preferedDistance: number;
-    interestedIn: Gender;
+    sex: string;
+    interestedIn: string;
 }
 
-const DetailsForm: React.FC = () => {
-    const [userName, setUserName] = React.useState<string>('redvineenjoyer1337');
-
+const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
+    user,
+    readonly,
+}: {
+    user: User;
+    readonly: boolean;
+}) => {
     const toast = React.useRef(null);
+    console.log(user);
 
     const show = () => {
         //@ts-ignore
@@ -25,11 +30,9 @@ const DetailsForm: React.FC = () => {
     };
 
     const defaultValues: UserProfileInfo = {
-        name: '',
-        age: 0,
-        sex: Gender.Other,
-        preferedDistance: 0,
-        interestedIn: Gender.FEMALE,
+        name: user.firstName,
+        sex: user.sex,
+        interestedIn: user.showingGender,
     };
 
     const {
@@ -53,6 +56,11 @@ const DetailsForm: React.FC = () => {
         );
     };
 
+    const genderOptions = Object.values(Gender).map((g) => ({
+        name: g.toLowerCase(),
+        value: g,
+    }));
+
     return (
         <div className="card flex justify-content-center mt-4">
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-column gap-2 w-4">
@@ -73,6 +81,7 @@ const DetailsForm: React.FC = () => {
                                     value={field.value}
                                     className={classNames({ 'p-invalid': fieldState.error, 'w-12': true })}
                                     onChange={(e) => field.onChange(e.target.value)}
+                                    disabled={readonly}
                                 />
                                 <label htmlFor={field.name}>Name - Surname</label>
                             </span>
@@ -80,7 +89,63 @@ const DetailsForm: React.FC = () => {
                         </>
                     )}
                 />
-                <Button label="Submit" type="submit" icon="pi pi-check" />
+                <Controller
+                    name="sex"
+                    control={control}
+                    rules={{ required: 'Sex is required.' }}
+                    render={({ field, fieldState }) => (
+                        <>
+                            <label
+                                htmlFor={field.name}
+                                className={classNames({ 'p-error': errors.name })}
+                            ></label>
+                            <span className="p-float-label">
+                                <Dropdown
+                                    id={field.name}
+                                    value={field.value}
+                                    placeholder="Sex"
+                                    options={genderOptions}
+                                    optionLabel="value"
+                                    focusInputRef={field.ref}
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    className={classNames({ 'p-invalid': fieldState.error, 'w-12': true })}
+                                    disabled={readonly}
+                                />
+                                <label htmlFor={field.name}>Sex</label>
+                            </span>
+                            {getFormErrorMessage(field.name)}
+                        </>
+                    )}
+                />
+                <Controller
+                    name="interestedIn"
+                    control={control}
+                    rules={{ required: 'Your preferences is required.' }}
+                    render={({ field, fieldState }) => (
+                        <>
+                            <label
+                                htmlFor={field.name}
+                                className={classNames({ 'p-error': errors.name })}
+                            ></label>
+                            <span className="p-float-label">
+                                <Dropdown
+                                    id={field.name}
+                                    value={field.value}
+                                    placeholder="Interested in"
+                                    options={genderOptions}
+                                    optionLabel="value"
+                                    focusInputRef={field.ref}
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    className={classNames({ 'p-invalid': fieldState.error, 'w-12': true })}
+                                    disabled={readonly}
+                                />
+                                <label htmlFor={field.name}>Interested in</label>
+                            </span>
+                            {getFormErrorMessage(field.name)}
+                        </>
+                    )}
+                />
+                {!readonly && <Button label="Save" type="submit" icon="pi pi-save" />}
             </form>
         </div>
     );
