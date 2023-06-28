@@ -18,6 +18,7 @@ import { Slider } from 'primereact/slider';
 
 import { Checkbox } from 'primereact/checkbox';
 import { User } from '../../model'
+import { login, register, uploadImage } from '../../DataService'
 
 
 const hobbyOptions = [
@@ -27,37 +28,50 @@ const hobbyOptions = [
 
 
 export default function RegisterPage(props: { setUser: Function, user: User | undefined }) {
-    const [email, setEmail] = useState("")
+    const [mail, setMail] = useState("")
     const [password, setPassword] = useState("")
     const [photo, setPhoto] = useState("https://png.pngtree.com/png-vector/20220608/ourmid/pngtree-unnamed-user-avatar-icon-profile-png-image_4816337.png")
     const [firstName, setFirstName] = useState("")
-    const [birthDate, setBirthDate] = useState<Date | string | Date[]>()
-    const [sex, setSex] = useState("")
+    const [birthDate, setBirthDate] = useState<Date>()
+    const [sex, setSex] = useState(-1)
     const [aboutMe, setAboutMe] = useState("")
-    const [hobbies, setHobbies] = useState<string[]>()
-    const [height, setHeight] = useState<any>(0)
+    //const [hobbies, setHobbies] = useState<string[]>()
+    const [height, setHeight] = useState<any>(-1)
     const [education, setEducation] = useState("")
     const [job, setJob] = useState("")
-    const [facebook, setFacebook] = useState("")
-    const [instagram, setInstagram] = useState("")
-    const [showingGender, setShowingGender] = useState("")
+    const [facebookLink, setFacebookLink] = useState("")
+    const [instagramLink, setInstagramLink] = useState("")
+    const [showingGender, setShowingGender] = useState(-1)
     const [city, setCity] = useState("")
     const [ageRange, setAgeRange] = useState<any>([18, 100])
-    const [showOnlyMyCity, setShowOnlyMyCity] = useState(false)
+    const [showingOnlyMyCity, setShowingOnlyMyCity] = useState(false)
     const [step, setStep] = useState(0)
     const [showError, setShowError] = useState<boolean>(false);
     const navigate = useNavigate();
 
+    function padTo2Digits(num: number) {
+        return num.toString().padStart(2, '0');
+    }
+
+    function formatDate(date: Date) {
+        return [
+            date.getFullYear(),
+            padTo2Digits(date.getMonth() + 1),
+            padTo2Digits(date.getDate()),
+        ].join('-');
+    }
+
     const handleNext = async () => {
         switch (step) {
             case 0:
-                if (email && password) {
+                if (mail && password) {
                     setShowError(false)
                     setStep(1);
                 }
                 else {
                     setShowError(true)
                 }
+                break;
             case 1:
                 if (photo && firstName && sex && birthDate && height) {
                     setShowError(false)
@@ -66,34 +80,79 @@ export default function RegisterPage(props: { setUser: Function, user: User | un
                 else {
                     setShowError(true)
                 }
+                break;
             case 2:
-                if (aboutMe && hobbies && city && job && education && instagram && facebook) {
+                if (aboutMe /* && hobbies */ && city && job && education && instagramLink && facebookLink) {
                     setShowError(false)
                     setStep(3);
                 }
                 else {
                     setShowError(true)
                 }
+                break;
             case 3:
-                if (showingGender && ageRange) {
+                if (showingGender!==-1 && ageRange && birthDate) {
+                    console.log(showingGender)
                     setShowError(false)
-                    props.setUser({
-                        email, password, photo, firstName, sex, birthDate, height, aboutMe, hobbies, city, job, education, instagram, facebook, showingGender, ageRange, showOnlyMyCity
-                    })
-                    navigate('/profile')
+
+                    const userData = {
+                        mail,
+                        password,
+                        firstName,
+                        birthDate: formatDate(birthDate),
+                        sex,
+                        city,
+                        aboutMe,
+                        height,
+                        education,
+                        job,
+                        photo,
+                        facebookLink,
+                        instagramLink,
+                        showingGender,
+                        ageRangeMin: ageRange[0],
+                        ageRangeMax: ageRange[1],
+                        showingOnlyMyCity
+                    }
+
+                    const user = await register(userData).then(async (data:boolean) => {
+                        if(data){
+                            return await login(mail,password);
+                        }
+                        return null;
+                    });
+                    if (user){
+                        props.setUser(user);
+                        navigate('/swipes');
+                    }
+                    else setShowError(true);
                 }
                 else {
                     setShowError(true)
                 }
+                break;
         }
 
     }
 
     useEffect(() => {
-        if(props.user)  navigate('/swipes')
-    },[props])
+        if (props.user) navigate('/swipes')
+    }, [props])
 
-    const onUpload = () => { }
+    const customBase64Uploader = async (event:any) => {
+        const file = event.files[0];
+        const reader = new FileReader();
+        let blob = await fetch(file.objectURL).then(r => r.blob()); //blob:url
+        reader.readAsDataURL(blob);
+        reader.onloadend = async function () {
+            const base64data = reader.result;
+            if(base64data){
+                const url = await uploadImage(base64data);
+                console.log('url img',url)
+                if(url) setPhoto(url);
+            }
+        }
+    }
 
     return (
         <div className="register-page">
@@ -103,7 +162,7 @@ export default function RegisterPage(props: { setUser: Function, user: User | un
                         <h3 className='register-page__form-container__header'>Create an account</h3>
                         <div className="register-page__form-container__input-container">
                             <label htmlFor='username'>e-mail</label>
-                            <InputText id="username" onChange={(e) => setEmail(e.target.value)} />
+                            <InputText id="username" onChange={(e) => setMail(e.target.value)} />
                         </div>
 
                         <div className="register-page__form-container__input-container">
@@ -119,20 +178,20 @@ export default function RegisterPage(props: { setUser: Function, user: User | un
                         <div className="register-page__form-container__image-container">
                             <img src={photo} />
                         </div>
-                        <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" maxFileSize={1000000} onUpload={onUpload} />
+                        <FileUpload mode="basic" name="demo[]" url="https://primefaces.org/primereact/showcase/upload.php" accept="image/*" customUpload uploadHandler={customBase64Uploader} />
                         <div className="register-page__form-container__input-container">
                             <label htmlFor='firstname'>First name</label>
                             <InputText id="firstname" onChange={(e) => setFirstName(e.target.value)} />
                         </div>
                         <div className="register-page__form-container__input-container register-page__form-container__sex-input_container">
-                            <RadioButton id="male" onChange={(e) => { setSex("male") }} checked={sex === "male"} />
+                            <RadioButton id="male" onChange={(e) => { setSex(1) }} checked={sex === 1} />
                             <label htmlFor='male'>Male</label>
-                            <RadioButton id="female" onChange={(e) => { setSex("female") }} checked={sex === "female"} />
+                            <RadioButton id="female" onChange={(e) => { setSex(0) }} checked={sex === 0} />
                             <label htmlFor='female'>Female</label>
                         </div>
                         <div className="register-page__form-container__input-container">
                             <label htmlFor='birth-date'>Birth date</label>
-                            <Calendar id="birth-date" value={birthDate} onChange={(e) => { if (e.value) setBirthDate(e.value) }} selectionMode='single' />
+                            <Calendar id="birth-date" value={birthDate} onChange={(e) => { if (e.value instanceof Date) setBirthDate(e.value) }} selectionMode='single' />
                         </div>
                         <div className="register-page__form-container__input-container">
                             <label htmlFor='birth-date'>Your height (cm)</label>
@@ -148,11 +207,11 @@ export default function RegisterPage(props: { setUser: Function, user: User | un
                             <label htmlFor='bio'>Describe yourself</label>
                             <InputTextarea autoResize value={aboutMe} onChange={(e) => setAboutMe(e.target.value)} rows={5} cols={30} />
                         </div>
-                        <div className="register-page__form-container__input-container">
+                        {/*                         <div className="register-page__form-container__input-container">
                             <label htmlFor='hobbies'>Your hobbies</label>
                             <MultiSelect value={hobbies} onChange={(e) => setHobbies(e.value)} options={hobbyOptions} optionLabel="name"
                                 placeholder="Select Cities" maxSelectedLabels={3} className="w-full md:w-20rem" id='hobbies' />
-                        </div>
+                        </div> */}
                         <div className="register-page__form-container__input-container">
                             <label htmlFor='city'>Where do you live?</label>
                             <InputText id="city" onChange={(e) => setCity(e.target.value)} />
@@ -167,11 +226,11 @@ export default function RegisterPage(props: { setUser: Function, user: User | un
                         </div>
                         <div className="register-page__form-container__input-container">
                             <label htmlFor='instagram'>Instagram username</label>
-                            <InputText id="instagram" onChange={(e) => setInstagram(e.target.value)} />
+                            <InputText id="instagram" onChange={(e) => setInstagramLink(e.target.value)} />
                         </div>
                         <div className="register-page__form-container__input-container">
                             <label htmlFor='facebook'>Facebook url</label>
-                            <InputText id="facebook" onChange={(e) => setFacebook(e.target.value)} />
+                            <InputText id="facebook" onChange={(e) => setFacebookLink(e.target.value)} />
                         </div>
                     </>
                 }
@@ -179,9 +238,9 @@ export default function RegisterPage(props: { setUser: Function, user: User | un
                     <>
                         <h3 className='register-page__form-container__header'>Who are you looking for?</h3>
                         <div className="register-page__form-container__input-container register-page__form-container__sex-input_container">
-                            <RadioButton id="male" onChange={(e) => { setShowingGender("male") }} checked={showingGender === "male"} />
+                            <RadioButton id="male" onChange={(e) => { setShowingGender(1) }} checked={showingGender === 1} />
                             <label htmlFor='male'>Male</label>
-                            <RadioButton id="female" onChange={(e) => { setShowingGender("female") }} checked={showingGender === "female"} />
+                            <RadioButton id="female" onChange={(e) => { setShowingGender(0) }} checked={showingGender === 0} />
                             <label htmlFor='female'>Female</label>
                         </div>
                         <div className="register-page__form-container__input-container">
@@ -194,7 +253,7 @@ export default function RegisterPage(props: { setUser: Function, user: User | un
                         </div>
                         <div className="register-page__form-container__input-container">
                             <label htmlFor='my-city-only'>Only your city?</label>
-                            <Checkbox id="my-city-only" onChange={(e) => { if (e.checked !== undefined) setShowOnlyMyCity(e.checked) }} checked={showOnlyMyCity} />
+                            <Checkbox id="my-city-only" onChange={(e) => { if (e.checked !== undefined) setShowingOnlyMyCity(e.checked) }} checked={showingOnlyMyCity} />
                         </div>
                     </>
                 }
@@ -202,7 +261,7 @@ export default function RegisterPage(props: { setUser: Function, user: User | un
                     {step !== 0 && <Button label="Back" onClick={() => setStep(step - 1)} />}
                     <Button label={step !== 3 ? "Next" : "Submit"} onClick={handleNext} />
                 </div>
-                {/* {showError && <div className="register-page__form-container__error">Insert all data</div>} */}
+                {showError && <div className="register-page__form-container__error">Insert all data</div>}
 
             </div>
         </div>
