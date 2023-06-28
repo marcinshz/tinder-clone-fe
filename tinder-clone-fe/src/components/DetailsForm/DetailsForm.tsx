@@ -1,18 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { Gender } from '../../model';
+import { Gender, Preferences } from '../../model';
 import { classNames } from 'primereact/utils';
 import { User } from '../../model';
 import { Dropdown } from 'primereact/dropdown';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { updateUser } from '../../DataService';
 
 interface UserProfileInfo {
     name: string;
-    sex: string;
-    interestedIn: string;
+    sex: number;
+    showingGender: number;
     city: string;
     aboutMe: string | undefined;
     education: string | undefined;
@@ -28,7 +29,7 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
     readonly: boolean;
 }) => {
     const toast = React.useRef(null);
-    console.log(user);
+    const [updatedUser, setUpdatedUser] = useState<User>(user);
 
     const show = () => {
         //@ts-ignore
@@ -38,7 +39,7 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
     const defaultValues: UserProfileInfo = {
         name: user.firstName,
         sex: user.sex,
-        interestedIn: user.showingGender,
+        showingGender: user.showingGender,
         aboutMe: user.aboutMe,
         city: user.city,
         education: user.education,
@@ -50,11 +51,35 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
         control,
         formState: { errors },
         handleSubmit,
+        register,
+        getValues,
     } = useForm({ defaultValues });
 
-    const onSubmit = (data: UserProfileInfo) => {
-        console.log(data);
-        show();
+    const onSubmit = async (data: UserProfileInfo) => {
+        try {
+            toast!.current!.show({
+                severity: 'info',
+                summary: 'Updating',
+                detail: 'Updating user data',
+            });
+            await setUpdatedUser({ ...data, ...user });
+            console.log(updatedUser);
+            await updateUser(`${user.id}`, updatedUser);
+            await toast!.current!.clear();
+            toast!.current!.show({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Updatinging successfull',
+                life: 3000,
+            });
+        } catch (e) {
+            toast!.current!.show({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Updatinging failed',
+                life: 3000,
+            });
+        }
     };
 
     const getFormErrorMessage = (name: string) => {
@@ -66,20 +91,17 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
             <small className="p-error">&nbsp;</small>
         );
     };
-
-    const genderOptions = Object.values(Gender).map((g) => ({
-        name: g.toLowerCase(),
-        value: g,
-    }));
+    //readonly
 
     return (
         <div className="card flex justify-content-center mt-4">
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-column gap-2 w-4">
                 <Toast ref={toast} />
+                {/* name */}
                 <Controller
                     name="name"
                     control={control}
-                    rules={{ required: 'Name is required.' }}
+                    rules={{ required: 'Name - Surname is required.' }}
                     render={({ field, fieldState }) => (
                         <>
                             <label
@@ -94,103 +116,22 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
                                     onChange={(e) => field.onChange(e.target.value)}
                                     disabled={readonly}
                                 />
-                                <label htmlFor={field.name}>Name - Surname</label>
+                                <label htmlFor={field.name}>Name</label>
                             </span>
                             {getFormErrorMessage(field.name)}
                         </>
                     )}
                 />
-                <Controller
-                    name="sex"
-                    control={control}
-                    rules={{ required: 'Sex is required.' }}
-                    render={({ field, fieldState }) => (
-                        <>
-                            <label
-                                htmlFor={field.name}
-                                className={classNames({ 'p-error': errors.name })}
-                            ></label>
-                            <span className="p-float-label">
-                                <Dropdown
-                                    id={field.name}
-                                    value={field.value}
-                                    placeholder="Sex"
-                                    options={genderOptions}
-                                    optionLabel="value"
-                                    focusInputRef={field.ref}
-                                    onChange={(e) => field.onChange(e.target.value)}
-                                    className={classNames({ 'p-invalid': fieldState.error, 'w-12': true })}
-                                    disabled={readonly}
-                                />
-                                <label htmlFor={field.name}>Sex</label>
-                            </span>
-                            {getFormErrorMessage(field.name)}
-                        </>
-                    )}
-                />
-                <Controller
-                    name="interestedIn"
-                    control={control}
-                    rules={{ required: 'Your preferences is required.' }}
-                    render={({ field, fieldState }) => (
-                        <>
-                            <label
-                                htmlFor={field.name}
-                                className={classNames({ 'p-error': errors.name })}
-                            ></label>
-                            <span className="p-float-label">
-                                <Dropdown
-                                    id={field.name}
-                                    value={field.value}
-                                    placeholder="Interested in"
-                                    options={genderOptions}
-                                    optionLabel="value"
-                                    focusInputRef={field.ref}
-                                    onChange={(e) => field.onChange(e.target.value)}
-                                    className={classNames({ 'p-invalid': fieldState.error, 'w-12': true })}
-                                    disabled={readonly}
-                                />
-                                <label htmlFor={field.name}>Interested in</label>
-                            </span>
-                            {getFormErrorMessage(field.name)}
-                        </>
-                    )}
-                />
-                <Controller
-                    name="aboutMe"
-                    control={control}
-                    rules={{ required: 'Name is required.' }}
-                    render={({ field, fieldState }) => (
-                        <>
-                            <label
-                                htmlFor={field.name}
-                                className={classNames({ 'p-error': errors.name })}
-                            ></label>
-                            <span className="p-float-label">
-                                <InputTextarea
-                                    id={field.name}
-                                    value={field.value}
-                                    className={classNames({ 'p-invalid': fieldState.error, 'w-12': true })}
-                                    onChange={(e) => field.onChange(e.target.value)}
-                                    disabled={readonly}
-                                    style={{ resize: 'none' }}
-                                    autoResize
-                                />
-                                <label htmlFor={field.name}>About me</label>
-                            </span>
-                            {getFormErrorMessage(field.name)}
-                        </>
-                    )}
-                />
+                {/* city */}
                 <Controller
                     name="city"
                     control={control}
-                    rules={{ required: 'City is required.' }}
+                    rules={{ required: 'City - City is required.' }}
                     render={({ field, fieldState }) => (
                         <>
                             <label
                                 htmlFor={field.name}
-                                className={classNames({ 'p-error': errors.name })}
+                                className={classNames({ 'p-error': errors.city })}
                             ></label>
                             <span className="p-float-label">
                                 <InputText
@@ -206,14 +147,16 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
                         </>
                     )}
                 />
+                {/* education */}
                 <Controller
                     name="education"
                     control={control}
+                    rules={{ required: 'Education is required.' }}
                     render={({ field, fieldState }) => (
                         <>
                             <label
                                 htmlFor={field.name}
-                                className={classNames({ 'p-error': errors.name })}
+                                className={classNames({ 'p-error': errors.education })}
                             ></label>
                             <span className="p-float-label">
                                 <InputText
@@ -229,53 +172,85 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
                         </>
                     )}
                 />
+                {/* about me */}
+                <Controller
+                    name="aboutMe"
+                    control={control}
+                    rules={{ required: 'About me is required.' }}
+                    render={({ field, fieldState }) => (
+                        <>
+                            <label
+                                htmlFor={field.name}
+                                className={classNames({ 'p-error': errors.aboutMe })}
+                            ></label>
+                            <span className="p-float-label">
+                                <InputTextarea
+                                    id={field.name}
+                                    value={field.value}
+                                    className={classNames({ 'p-invalid': fieldState.error, 'w-12': true })}
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    disabled={readonly}
+                                    autoResize
+                                />
+                                <label htmlFor={field.name}>About me</label>
+                            </span>
+                            {getFormErrorMessage(field.name)}
+                        </>
+                    )}
+                />
+                {/* facebookLink */}
                 <Controller
                     name="facebookLink"
                     control={control}
+                    rules={{ required: 'Facebook link is required.' }}
                     render={({ field, fieldState }) => (
                         <>
                             <label
                                 htmlFor={field.name}
-                                className={classNames({ 'p-error': errors.name })}
+                                className={classNames({ 'p-error': errors.facebookLink })}
                             ></label>
                             <span className="p-float-label">
-                                <InputText
+                                <InputTextarea
                                     id={field.name}
                                     value={field.value}
                                     className={classNames({ 'p-invalid': fieldState.error, 'w-12': true })}
                                     onChange={(e) => field.onChange(e.target.value)}
                                     disabled={readonly}
+                                    autoResize
                                 />
-                                <label htmlFor={field.name}>Link to Facebook</label>
+                                <label htmlFor={field.name}>Facebook link</label>
                             </span>
                             {getFormErrorMessage(field.name)}
                         </>
                     )}
                 />
+                {/* instagram link */}
                 <Controller
                     name="instagramLink"
                     control={control}
+                    rules={{ required: 'Instagram link is required.' }}
                     render={({ field, fieldState }) => (
                         <>
                             <label
                                 htmlFor={field.name}
-                                className={classNames({ 'p-error': errors.name })}
+                                className={classNames({ 'p-error': errors.instagramLink })}
                             ></label>
                             <span className="p-float-label">
-                                <InputText
+                                <InputTextarea
                                     id={field.name}
                                     value={field.value}
                                     className={classNames({ 'p-invalid': fieldState.error, 'w-12': true })}
                                     onChange={(e) => field.onChange(e.target.value)}
                                     disabled={readonly}
+                                    autoResize
                                 />
-                                <label htmlFor={field.name}>Link to Instagram</label>
+                                <label htmlFor={field.name}>Instagram link</label>
                             </span>
                             {getFormErrorMessage(field.name)}
                         </>
                     )}
                 />
-                {!readonly && <Button label="Save" type="submit" icon="pi pi-save" />}
+                {!readonly && <Button label="Submit" type="submit" icon="pi pi-check" />}
             </form>
         </div>
     );

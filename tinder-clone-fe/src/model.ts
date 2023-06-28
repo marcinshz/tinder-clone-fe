@@ -1,7 +1,12 @@
 export enum Gender {
-    MALE = 'Male',
-    FEMALE = 'Female',
-    Other = 'Other'
+    Female = '0',
+    Male = '1'
+}
+
+export enum Preferences {
+    Female = '0',
+    Male = '1',
+    Both = '2'
 }
 
 // TODO replace hobbies with Array<Hobby> and sex, showingGender with gender
@@ -11,7 +16,7 @@ export interface User {
     password: string;
     firstName: string;
     birthDate: Date;
-    sex: string;
+    sex: number;
     city: string;
     aboutMe?: string;
     height: number;
@@ -20,14 +25,14 @@ export interface User {
     photo: string;
     facebookLink?: string;
     instagramLink?: string;
-    showingGender: string;
+    showingGender: number;
     ageRangeMin: number;
     ageRangeMax: number;
     showOnlyMyCity: boolean;
     hobbies: Array<string>;
 };
 
-export interface CreateUserDto{
+export interface CreateUserDto {
     mail: string;
     password: string;
     firstName: string;

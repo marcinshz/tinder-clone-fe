@@ -11,7 +11,7 @@ import SwipingArea from './pages/SwipingArea/SwipingArea';
 function App() {
     const [user, setUser] = useState<User>();
     useEffect(() => {
-        console.log('user',user)
+        console.log('user', user);
         if (user) {
             let tmp = sessionStorage.getItem('user');
             if (!tmp) sessionStorage.setItem('user', JSON.stringify(user));
