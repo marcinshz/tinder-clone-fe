@@ -8,7 +8,7 @@ const SwipingArea = (props:{user:User}) => {
     console.log('swipe',props.user)
     return (
         <>
-            <Swipes />
+            <Swipes user={props.user}/>
         </>
     )
 }

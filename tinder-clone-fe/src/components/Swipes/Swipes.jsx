@@ -4,19 +4,22 @@ import FavoriteSharpIcon from '@mui/icons-material/FavoriteSharp';
 import IconButton from '@mui/material/IconButton';
 import './Swipes.css';
 
-const Swipes = () => {
-  const [people, setPeople] = useState([]);
+const Swipes = ({user}) => {
+  const [draws, setDraws] = useState([]);
+  const [likes, setLikes] = useState([]);
   const [currentPersonIndex, setCurrentPersonIndex] = useState(0);
   const [showMatchModal, setShowMatchModal] = useState(false);
+  const [igLinkToDisplay, setIgLinkToDislplay] = useState('')
 
   // Przykładowa funkcja do pobierania danych z serwera
-  const fetchData = async () => {
+  const fetchDrawData = async () => {
+    const url = `https://localhost:7127/User/draw/${user.id}`
 
     try {
-        const response = await fetch('https://localhost:44304/User/draw/{userId}');
+        const response = await fetch(url);
         if (response.status === 200) {
           const data = await response.json();
-          setPeople(data);
+          setDraws(data);
         } else {
           console.log('Nie udało się pobrać danych użytkowników.');
         }
@@ -24,33 +27,57 @@ const Swipes = () => {
         console.error('Wystąpił błąd:', error);
       }
 
-    const dummyData = [
-      { id: 1, name: 'John', age: 25, description: 'Lorem ipsum', imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" },
-      { id: 2, name: 'Jane', age: 28, description: 'Dolor sit amet', imageUrl: "https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" },
-      // Dodaj więcej osób
-    ];
+  };
 
-    setPeople(dummyData);
+  const fetchLikesData = async () => {
+    const url = `https://localhost:7127/User/getLikedMe/${user.id}`
+
+    try {
+        const response = await fetch(url);
+        if (response.status === 200) {
+          const data = await response.json();
+          setLikes(data);
+        } else {
+          console.log('Nie udało się pobrać danych użytkowników.');
+        }
+      } catch (error) {
+        console.error('Wystąpił błąd:', error);
+      }
+
   };
 
   useEffect(() => {
-    fetchData();
+    fetchDrawData();
+    fetchLikesData();
   }, []);
 
-  const handleLike = () => {
-    setShowMatchModal(true)
-    // Wywołaj request POST do serwera z informacją o polubieniu osoby
-    // Tu możesz dodać własną logikę związaną z obsługą polubień
+  const handleLike = async (currentPerson) => {
+    const url = `https://localhost:7127/api/Like/like/${user.id}/${currentPerson.id}`
+    try {
+        const response = await fetch(url, {method: "GET"});
+      } catch (error) {
+        console.error('Wystąpił błąd:', error);
+      }
 
-    // Przejdź do następnej osoby
+    likes.map((person) => {
+        if (person.id === currentPerson.id){
+            setShowMatchModal(true)
+            setIgLinkToDislplay(person.instagramLink)
+        }
+    })
+    
     setCurrentPersonIndex(currentPersonIndex + 1);
   };
 
-  const handleDislike = () => {
-    // Wywołaj request POST do serwera z informacją o odrzuceniu osoby
-    // Tu możesz dodać własną logikę związaną z obsługą odrzuceń
+  const handleDislike = async (currentPerson) => {
+    const url = `https://localhost:7127/api/Like/disLike/${user.id}/${currentPerson.id}`
 
-    // Przejdź do następnej osoby
+    try {
+        const response = await fetch(url, {method: "GET"});
+      } catch (error) {
+        console.error('Wystąpił błąd:', error);
+      }
+
     setCurrentPersonIndex(currentPersonIndex + 1);
   };
 
@@ -58,16 +85,31 @@ const Swipes = () => {
     setShowMatchModal(false);
   };
 
+  const calculateAge = (dateOfBirth) => {
+    const dob = new Date(dateOfBirth);
+    const today = new Date();
+  
+    let age = today.getFullYear() - dob.getFullYear();
+  
+    const monthDiff = today.getMonth() - dob.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+      age--;
+    }
+  
+    return age;
+  }
 
-  if (people.length === 0) {
+
+  if (draws.length === 0) {
     return <div className="tinder-cards">Loading...</div>;
   }
 
-  if (currentPersonIndex >= people.length) {
+  if (currentPersonIndex >= draws.length) {
     return <div className="tinder-cards">No more people to display.</div>;
   }
 
-  const currentPerson = people[currentPersonIndex];
+  const currentPerson = draws[currentPersonIndex];
+  const previousPerson = draws[currentPersonIndex-1]
 
   return (
     <div className="tinder-cards">
@@ -75,24 +117,25 @@ const Swipes = () => {
         <div className="modal">
             <div className="modal-content">
                 <h2>It's a Match!</h2>
-                <p>You matched with Jadwiga!</p>
+                <p>You matched with {previousPerson.firstName}</p>
+                <p>Catch up on instagram: {igLinkToDisplay}</p>
                 <button onClick={handleCloseModal}>Close</button>
             </div>
             </div>
       )}
       <div className="card">
-        <img className="card-image" src={currentPerson.imageUrl} alt={currentPerson.name} />
+        <img className="card-image" src={currentPerson.photo} alt={currentPerson.firstName} />
         <div className="card-info">
-          <h2 className="card-name">{currentPerson.name}</h2>
-          <p className="card-details">Age: {currentPerson.age}</p>
-          <p className="card-details">Description: {currentPerson.description}</p>
+          <h2 className="card-name">{currentPerson.firstName}</h2>
+          <p className="card-details">Age: {calculateAge(currentPerson.birthDate)}</p>
+          <p className="card-details">Description: {currentPerson.aboutMe}</p>
         </div>
       </div>
       <div className="buttons">
-        <IconButton aria-label="dislike" size="large" onClick={handleDislike}>
+        <IconButton aria-label="dislike" size="large" onClick={() => {handleDislike(currentPerson)}}>
                 <ClearRoundedIcon fontSize="large" style={{color: "rgb(240, 78, 78)"}} />
             </IconButton>
-        <IconButton aria-label="like" size="large" onClick={handleLike}>
+        <IconButton aria-label="like" size="large" onClick={() => {handleLike(currentPerson)}}>
                 <FavoriteSharpIcon fontSize="large" style={{color: "rgb(111, 221, 173)"}} />
         </IconButton>
       </div>
