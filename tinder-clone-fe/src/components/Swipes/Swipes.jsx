@@ -13,7 +13,7 @@ const Swipes = ({user}) => {
 
   // Przykładowa funkcja do pobierania danych z serwera
   const fetchDrawData = async () => {
-    const url = `https://localhost:7127/User/draw/${user.id}`
+    const url = `https://localhost:44304/User/draw/${user.id}`
 
     try {
         const response = await fetch(url);
@@ -30,7 +30,7 @@ const Swipes = ({user}) => {
   };
 
   const fetchLikesData = async () => {
-    const url = `https://localhost:7127/User/getLikedMe/${user.id}`
+    const url = `https://localhost:44304/User/getLikedMe/${user.id}`
 
     try {
         const response = await fetch(url);
@@ -52,9 +52,14 @@ const Swipes = ({user}) => {
   }, []);
 
   const handleLike = async (currentPerson) => {
-    const url = `https://localhost:7127/api/Like/like/${user.id}/${currentPerson.id}`
+    const url = `https://localhost:44304/api/Like/like/${user.id}/${currentPerson.id}`
     try {
-        const response = await fetch(url, {method: "GET"});
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "text/json",
+        },
+        });
       } catch (error) {
         console.error('Wystąpił błąd:', error);
       }
@@ -70,7 +75,7 @@ const Swipes = ({user}) => {
   };
 
   const handleDislike = async (currentPerson) => {
-    const url = `https://localhost:7127/api/Like/disLike/${user.id}/${currentPerson.id}`
+    const url = `https://localhost:44304/api/Like/disLike/${user.id}/${currentPerson.id}`
 
     try {
         const response = await fetch(url, {method: "GET"});
@@ -100,12 +105,14 @@ const Swipes = ({user}) => {
   }
 
 
-  if (draws.length === 0) {
-    return <div className="tinder-cards">Loading...</div>;
-  }
+
 
   if (currentPersonIndex >= draws.length) {
     return <div className="tinder-cards">No more people to display.</div>;
+  }
+
+  if (draws.length === 0) {
+    return <div className="tinder-cards">Loading...</div>;
   }
 
   const currentPerson = draws[currentPersonIndex];
@@ -132,10 +139,10 @@ const Swipes = ({user}) => {
         </div>
       </div>
       <div className="buttons">
-        <IconButton aria-label="dislike" size="large" onClick={() => {handleDislike(currentPerson)}}>
+        <IconButton aria-label="dislike" size="large" onClick={() => {handleDislike(currentPerson)}} disabled={showMatchModal}>
                 <ClearRoundedIcon fontSize="large" style={{color: "rgb(240, 78, 78)"}} />
             </IconButton>
-        <IconButton aria-label="like" size="large" onClick={() => {handleLike(currentPerson)}}>
+        <IconButton aria-label="like" size="large" onClick={() => {handleLike(currentPerson)}} disabled={showMatchModal}>
                 <FavoriteSharpIcon fontSize="large" style={{color: "rgb(111, 221, 173)"}} />
         </IconButton>
       </div>
