@@ -1,11 +1,11 @@
 import React, { PropsWithChildren } from 'react';
 import MaintemplateCSS from './MainTemplate.module.scss';
 import TopBar from '../components/TopBar/TopBar';
-const MainTemplate: React.FC<PropsWithChildren> = ({ children }) => {
+const MainTemplate = (props:{ children:JSX.Element, loggedIn:boolean, setUser:Function }) => {
     return (
         <div className={MaintemplateCSS.wrapper}>
-            <TopBar />
-            {children}
+            <TopBar loggedIn={props.loggedIn} setUser={props.setUser}/>
+            {props.children}
         </div>
     );
 };

@@ -27,6 +27,27 @@ export interface User {
     hobbies: Array<string>;
 };
 
+export interface CreateUserDto{
+    mail: string;
+    password: string;
+    firstName: string;
+    birthDate: string;
+    sex: number;
+    city: string;
+    aboutMe: string;
+    height: number;
+    education: string;
+    job: string;
+    photo: string;
+    facebookLink: string;
+    instagramLink: string;
+    showingGender: number;
+    ageRangeMin: number;
+    ageRangeMax: number;
+    showingOnlyMyCity: boolean;
+    //hobbies: Array<string>;
+}
+
 export interface Liked {
     idLikedBy: number;
     idLikedWhom: number;

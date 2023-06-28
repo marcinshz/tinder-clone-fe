@@ -3,7 +3,7 @@ import './LoginPage.scss'
 import { InputText } from 'primereact/inputtext'
 import { Password } from 'primereact/password'
 import { Button } from 'primereact/button'
-import { Login } from '../../DataService'
+import { login } from '../../DataService'
 import { User } from '../../model'
 import { useNavigate } from 'react-router-dom'
 
@@ -20,10 +20,9 @@ function LoginPage(props: { setUser: Function, user: User | undefined }) {
     }
 
     const handleSubmit = async () => {
-        let user: User;
-
         if (email && password) {
-            user = await Login(email, password)
+            const user = await login(email, password)
+            console.log('user', user)
             if (user) {
                 props.setUser(user);
                 navigate('/swipes')
