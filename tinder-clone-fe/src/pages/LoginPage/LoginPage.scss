@@ -1,10 +1,8 @@
 .login-page {
     width: 100vw;
-    height: 80vh;
     display: flex;
     justify-content: center;
     align-items: center;
-
     &__form-container {
         width: 100%;
         max-width: 600px;
@@ -13,12 +11,14 @@
         justify-content: center;
         align-items: center;
         gap: 24px;
-
-
+        padding: 48px 0;
         &__input-container {
             display: flex;
             flex-direction: column;
             gap: 6px;
+        }
+        &__error {
+            color: red;
         }
     }
 }

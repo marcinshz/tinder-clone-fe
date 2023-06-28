@@ -1,10 +1,14 @@
-import React from 'react';
 import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router-dom';
 import TopBarCSS from './TopBar.module.scss';
 
-const TopBar: React.FC = () => {
+const TopBar = (props: { loggedIn: boolean, setUser:Function }) => {
     const navigate = useNavigate();
+    const handleLogout = () => {
+        sessionStorage.clear()
+        props.setUser(null)
+        navigate('/login')
+    }
     return (
         <div className={TopBarCSS.wrapper}>
             <div className="logo">
@@ -17,7 +21,7 @@ const TopBar: React.FC = () => {
                     onClick={() => navigate('/')}
                 />
             </div>
-            <div className={TopBarCSS.details}>
+            {props.loggedIn && <div className={TopBarCSS.details}>
                 <Button
                     severity="secondary"
                     type="button"
@@ -45,8 +49,8 @@ const TopBar: React.FC = () => {
                     icon="pi pi-user"
                     onClick={() => navigate('/profile')}
                 />
-                <Button rounded text raised severity="secondary" icon="pi pi-sign-out" />
-            </div>
+                <Button rounded text raised severity="secondary" icon="pi pi-sign-out" onClick={handleLogout}/>
+            </div>}
         </div>
     );
 };

@@ -11,6 +11,7 @@ import SwipingArea from './pages/SwipingArea/SwipingArea';
 function App() {
     const [user, setUser] = useState<User>();
     useEffect(() => {
+        console.log('user',user)
         if (user) {
             let tmp = sessionStorage.getItem('user');
             if (!tmp) sessionStorage.setItem('user', JSON.stringify(user));
@@ -24,7 +25,7 @@ function App() {
 
     return (
         <BrowserRouter>
-            <MainTemplate>
+            <MainTemplate loggedIn={user ? true : false} setUser={setUser}>
                 <Routes>
                     <Route path="/register" element={<RegisterPage setUser={setUser} user={user} />} />
                     <Route path="/login" element={<LoginPage setUser={setUser} user={user} />} />
