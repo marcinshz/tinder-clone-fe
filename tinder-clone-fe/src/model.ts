@@ -18,10 +18,10 @@ export interface User {
     birthDate: Date;
     sex: number;
     city: string;
-    aboutMe?: string;
+    aboutMe: string;
     height: number;
-    education?: string;
-    job?: string;
+    education: string;
+    job: string;
     photo: string;
     facebookLink?: string;
     instagramLink?: string;
@@ -29,7 +29,6 @@ export interface User {
     ageRangeMin: number;
     ageRangeMax: number;
     showOnlyMyCity: boolean;
-    hobbies: Array<string>;
 };
 
 export interface CreateUserDto {
@@ -50,7 +49,6 @@ export interface CreateUserDto {
     ageRangeMin: number;
     ageRangeMax: number;
     showingOnlyMyCity: boolean;
-    //hobbies: Array<string>;
 }
 
 export interface Liked {

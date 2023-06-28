@@ -1,4 +1,3 @@
-import { usersList } from './demodata';
 import { CreateUserDto, User } from './model';
 
 const api_url = 'https://localhost:44304/';
@@ -41,10 +40,10 @@ export async function getUser(id: string): Promise<User> {
         });
 }
 
-export async function updateUser(id: string, user: User): Promise<User> {
+export async function updateUser(id: string, user: CreateUserDto): Promise<User> {
     return await fetch(`${api_url}User/${id}`, {
-        method: 'PUT',
-        body: user,
+        method: 'POST',
+        body: JSON.stringify(user),
     })
         .then((res) => res.json())
         .then((data) => {

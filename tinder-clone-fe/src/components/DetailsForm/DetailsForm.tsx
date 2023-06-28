@@ -3,23 +3,22 @@ import { Controller, useForm } from 'react-hook-form';
 import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { Gender, Preferences } from '../../model';
 import { classNames } from 'primereact/utils';
-import { User } from '../../model';
-import { Dropdown } from 'primereact/dropdown';
+import { CreateUserDto, User } from '../../model';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { updateUser } from '../../DataService';
+import { formatDate } from '../../utils';
 
-interface UserProfileInfo {
-    name: string;
-    sex: number;
-    showingGender: number;
-    city: string;
-    aboutMe: string | undefined;
-    education: string | undefined;
-    facebookLink: string | undefined;
-    instagramLink: string | undefined;
-}
+// interface UserProfileInfo {
+//     firstName: string;
+//     sex: number;
+//     showingGender: number;
+//     city: string;
+//     aboutMe: string | undefined;
+//     education: string | undefined;
+//     facebookLink: string | undefined;
+//     instagramLink: string | undefined;
+// }
 
 const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
     user,
@@ -28,16 +27,8 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
     user: User;
     readonly: boolean;
 }) => {
-    const toast = React.useRef(null);
-    const [updatedUser, setUpdatedUser] = useState<User>(user);
-
-    const show = () => {
-        //@ts-ignore
-        toast.current.show({ severity: 'success', summary: 'User updated.' });
-    };
-
-    const defaultValues: UserProfileInfo = {
-        name: user.firstName,
+    const defaultValues: CreateUserDto = {
+        firstName: user.firstName,
         sex: user.sex,
         showingGender: user.showingGender,
         aboutMe: user.aboutMe,
@@ -45,24 +36,40 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
         education: user.education,
         facebookLink: user.facebookLink,
         instagramLink: user.instagramLink,
+        mail: user.mail,
+        password: user.password,
+        birthDate: 'some date',
+        height: user.height,
+        job: user.job,
+        photo: user.photo,
+        ageRangeMax: user.ageRangeMax,
+        ageRangeMin: user.ageRangeMin,
+        showingOnlyMyCity: user.showOnlyMyCity,
+    };
+
+    const toast = React.useRef(null);
+    const [updatedUser, setUpdatedUser] = useState<CreateUserDto>(defaultValues);
+
+    const show = () => {
+        //@ts-ignore
+        toast.current.show({ severity: 'success', summary: 'User updated.' });
     };
 
     const {
         control,
         formState: { errors },
         handleSubmit,
-        register,
-        getValues,
     } = useForm({ defaultValues });
 
-    const onSubmit = async (data: UserProfileInfo) => {
+    const onSubmit = async (data: CreateUserDto) => {
+        console.log(data);
         try {
             toast!.current!.show({
                 severity: 'info',
                 summary: 'Updating',
                 detail: 'Updating user data',
             });
-            await setUpdatedUser({ ...data, ...user });
+            await setUpdatedUser(data);
             console.log(updatedUser);
             await updateUser(`${user.id}`, updatedUser);
             await toast!.current!.clear();
@@ -73,6 +80,7 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
                 life: 3000,
             });
         } catch (e) {
+            console.log(e);
             toast!.current!.show({
                 severity: 'error',
                 summary: 'Error',
@@ -91,22 +99,20 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
             <small className="p-error">&nbsp;</small>
         );
     };
-    //readonly
-
     return (
         <div className="card flex justify-content-center mt-4">
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-column gap-2 w-4">
                 <Toast ref={toast} />
                 {/* name */}
                 <Controller
-                    name="name"
+                    name="firstName"
                     control={control}
                     rules={{ required: 'Name - Surname is required.' }}
                     render={({ field, fieldState }) => (
                         <>
                             <label
                                 htmlFor={field.name}
-                                className={classNames({ 'p-error': errors.name })}
+                                className={classNames({ 'p-error': errors.firstName })}
                             ></label>
                             <span className="p-float-label">
                                 <InputText
