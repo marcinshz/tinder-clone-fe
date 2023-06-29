@@ -55,7 +55,7 @@ const Swipes = ({user}) => {
     const url = `https://localhost:44304/api/Like/like/${user.id}/${currentPerson.id}`
     try {
         const response = await fetch(url, {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "text/json",
         },
