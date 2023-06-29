@@ -4,7 +4,7 @@ import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { classNames } from 'primereact/utils';
-import { CreateUserDto, User, UpdateUserDto } from '../../model';
+import { User, UpdateUserDto } from '../../model';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Dropdown } from 'primereact/dropdown';
 import { updateUser } from '../../DataService';
@@ -41,11 +41,9 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
         control,
         formState: { errors },
         handleSubmit,
-        register,
     } = useForm({ defaultValues });
 
     const onSubmit = async (data: UpdateUserDto) => {
-        console.log(data);
         try {
             toast!.current!.show({
                 severity: 'info',
@@ -216,7 +214,6 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
                             ></label>
                             <span className="p-float-label">
                                 <Dropdown
-                                    type="number"
                                     id={field.name}
                                     value={field.value}
                                     className={classNames({ 'p-invalid': fieldState.error, 'w-12': true })}
@@ -244,7 +241,6 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
                             ></label>
                             <span className="p-float-label">
                                 <Dropdown
-                                    type="number"
                                     id={field.name}
                                     value={field.value}
                                     className={classNames({ 'p-invalid': fieldState.error, 'w-12': true })}

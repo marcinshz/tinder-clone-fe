@@ -17,7 +17,11 @@ const Profile: React.FC<ProfileProps> = ({ user }: { user: User }) => {
         <div className={ProfileCSS.wrapper}>
             <Avatar user={user} />
             <div className="w-12 flex justify-content-center mt-4">
-                <Button icon="pi pi-pencil" label="Edit" onClick={toggleReadOnly} />
+                <Button
+                    icon={readonly ? 'pi pi-pencil' : 'pi pi-times'}
+                    label={readonly ? 'Edit' : 'Close'}
+                    onClick={toggleReadOnly}
+                />
             </div>
             <DetailsForm user={user} readonly={readonly} />
         </div>
