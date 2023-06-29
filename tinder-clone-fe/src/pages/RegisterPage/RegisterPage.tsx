@@ -168,22 +168,10 @@ export default function RegisterPage(props: { setUser: Function; user: User | un
                             <InputText id="firstname" onChange={(e) => setFirstName(e.target.value)} />
                         </div>
                         <div className="register-page__form-container__input-container register-page__form-container__sex-input_container">
-                            <RadioButton
-                                id="male"
-                                onChange={(e) => {
-                                    setSex(1);
-                                }}
-                                checked={sex === 1}
-                            />
-                            <label htmlFor="male">Male</label>
-                            <RadioButton
-                                id="female"
-                                onChange={(e) => {
-                                    setSex(0);
-                                }}
-                                checked={sex === 0}
-                            />
-                            <label htmlFor="female">Female</label>
+                            <RadioButton id="male" onChange={(e) => { setSex(2) }} checked={sex === 2} />
+                            <label htmlFor='male'>Male</label>
+                            <RadioButton id="female" onChange={(e) => { setSex(1) }} checked={sex === 1} />
+                            <label htmlFor='female'>Female</label>
                         </div>
                         <div className="register-page__form-container__input-container">
                             <label htmlFor="birth-date">Birth date</label>
@@ -222,11 +210,6 @@ export default function RegisterPage(props: { setUser: Function; user: User | un
                                 cols={30}
                             />
                         </div>
-                        {/*                         <div className="register-page__form-container__input-container">
-                            <label htmlFor='hobbies'>Your hobbies</label>
-                            <MultiSelect value={hobbies} onChange={(e) => setHobbies(e.value)} options={hobbyOptions} optionLabel="name"
-                                placeholder="Select Cities" maxSelectedLabels={3} className="w-full md:w-20rem" id='hobbies' />
-                        </div> */}
                         <div className="register-page__form-container__input-container">
                             <label htmlFor="city">Where do you live?</label>
                             <InputText id="city" onChange={(e) => setCity(e.target.value)} />
@@ -253,22 +236,12 @@ export default function RegisterPage(props: { setUser: Function; user: User | un
                     <>
                         <h3 className="register-page__form-container__header">Who are you looking for?</h3>
                         <div className="register-page__form-container__input-container register-page__form-container__sex-input_container">
-                            <RadioButton
-                                id="male"
-                                onChange={(e) => {
-                                    setShowingGender(1);
-                                }}
-                                checked={showingGender === 1}
-                            />
-                            <label htmlFor="male">Male</label>
-                            <RadioButton
-                                id="female"
-                                onChange={(e) => {
-                                    setShowingGender(0);
-                                }}
-                                checked={showingGender === 0}
-                            />
-                            <label htmlFor="female">Female</label>
+                            <RadioButton id="male" onChange={(e) => { setShowingGender(2) }} checked={showingGender === 2} />
+                            <label htmlFor='male'>Male</label>
+                            <RadioButton id="female" onChange={(e) => { setShowingGender(1) }} checked={showingGender === 1} />
+                            <label htmlFor='female'>Female</label>
+                            <RadioButton id="both" onChange={(e) => { setShowingGender(3) }} checked={showingGender === 3} />
+                            <label htmlFor='both'>Both</label>
                         </div>
                     </>
                 )}

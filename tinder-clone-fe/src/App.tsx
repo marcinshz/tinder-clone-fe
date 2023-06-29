@@ -6,12 +6,12 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import Homepage from './pages/Homepage/Homepage';
 import Profile from './pages/Profile/Profile';
-import SwipingArea from './pages/SwipingArea/SwipingArea';
+import SwipingArea from './pages/SwipingArea/SwipingArea'
+import MatchListPage from './pages/MatchListPage/MatchListPage';
 
 function App() {
     const [user, setUser] = useState<User>();
     useEffect(() => {
-        console.log('user', user);
         if (user) {
             let tmp = sessionStorage.getItem('user');
             if (!tmp) sessionStorage.setItem('user', JSON.stringify(user));
@@ -32,6 +32,7 @@ function App() {
                     <Route path="/" element={<Homepage user={user} />} />
                     {user && <Route path="/profile" element={<Profile user={user} />} />}
                     {user && <Route path="/swipes" element={<SwipingArea user={user} />} />}
+                    {user && <Route path="/matches" element={<MatchListPage user={user} />} />}
                 </Routes>
             </MainTemplate>
         </BrowserRouter>

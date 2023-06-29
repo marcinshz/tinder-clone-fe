@@ -23,15 +23,12 @@ const TopBar = (props: { loggedIn: boolean, setUser:Function }) => {
             </div>
             {props.loggedIn && <div className={TopBarCSS.details}>
                 <Button
-                    severity="secondary"
-                    type="button"
-                    label="Notifications"
-                    icon="pi pi-inbox"
+                    rounded
                     text
                     raised
-                    rounded
-                    badge="2"
-                    badgeClassName="p-badge-danger"
+                    severity="secondary"
+                    icon="pi pi-heart"
+                    onClick={() => navigate('/matches')}
                 />
                 <Button
                     rounded

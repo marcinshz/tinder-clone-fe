@@ -10,7 +10,7 @@ export enum Preferences {
 }
 
 export interface User {
-    id: number;
+    id: string;
     mail: string;
     password: string;
     firstName: string;
@@ -22,12 +22,9 @@ export interface User {
     education: string;
     job: string;
     photo: string;
-    facebookLink: string;
-    instagramLink: string;
+    facebookLink?: string;
+    instagramLink?: string;
     showingGender: number;
-    ageRangeMin: number;
-    ageRangeMax: number;
-    showOnlyMyCity: boolean;
 };
 
 export interface CreateUserDto {
@@ -45,6 +42,21 @@ export interface CreateUserDto {
     facebookLink: string;
     instagramLink: string;
     showingGender: number;
+}
+
+export interface Match{
+    mail: string;
+    firstName: string;
+    birthDate: string;
+    sex: number;
+    city: string;
+    aboutMe: string;
+    height: number;
+    education: string;
+    job: string;
+    photo: string;
+    facebookLink: string;
+    instagramLink: string;
 }
 
 export interface UpdateUserDto {
