@@ -42,10 +42,6 @@ export interface CreateUserDto{
     facebookLink: string;
     instagramLink: string;
     showingGender: number;
-    ageRangeMin: number;
-    ageRangeMax: number;
-    showingOnlyMyCity: boolean;
-    //hobbies: Array<string>;
 }
 
 export interface Liked {
