@@ -15,7 +15,7 @@ const Profile: React.FC<ProfileProps> = ({ user }: { user: User }) => {
 
     return (
         <div className={ProfileCSS.wrapper}>
-            <Avatar imageUrl={user.photo} name={user.firstName} />
+            <Avatar user={user} />
             <div className="w-12 flex justify-content-center mt-4">
                 <Button icon="pi pi-pencil" label="Edit" onClick={toggleReadOnly} />
             </div>

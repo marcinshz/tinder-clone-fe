@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
@@ -9,17 +9,6 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { updateUser } from '../../DataService';
 import { formatDate } from '../../utils';
 
-// interface UserProfileInfo {
-//     firstName: string;
-//     sex: number;
-//     showingGender: number;
-//     city: string;
-//     aboutMe: string | undefined;
-//     education: string | undefined;
-//     facebookLink: string | undefined;
-//     instagramLink: string | undefined;
-// }
-
 const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
     user,
     readonly,
@@ -27,7 +16,7 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
     user: User;
     readonly: boolean;
 }) => {
-    const defaultValues: CreateUserDto = {
+    const [cUser, setCuser] = useState({
         mail: user.mail,
         password: user.password,
         firstName: user.firstName,
@@ -42,7 +31,8 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
         facebookLink: user.facebookLink,
         instagramLink: user.instagramLink,
         showingGender: user.showingGender,
-    };
+    });
+    const defaultValues: CreateUserDto = cUser;
 
     const toast = React.useRef(null);
 
@@ -61,7 +51,8 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
                 detail: 'Updating user data',
             });
             await updateUser(`${user.id}`, data);
-            console.log('data:', data);
+            await setCuser(data);
+            await sessionStorage.setItem('user', JSON.stringify(data));
             await toast!.current!.clear();
             toast!.current!.show({
                 severity: 'success',
