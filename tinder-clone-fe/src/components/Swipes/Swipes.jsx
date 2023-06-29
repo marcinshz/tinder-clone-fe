@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import FavoriteSharpIcon from '@mui/icons-material/FavoriteSharp';
 import IconButton from '@mui/material/IconButton';
+import { Dialog } from 'primereact/dialog';
 import './Swipes.css';
+import './../../pages/MatchListPage/MatchListPage.scss'
 
 const Swipes = ({user}) => {
   const [draws, setDraws] = useState([]);
@@ -13,7 +15,7 @@ const Swipes = ({user}) => {
 
   // Przykładowa funkcja do pobierania danych z serwera
   const fetchDrawData = async () => {
-    const url = `https://localhost:44304/User/draw/${user.id}`
+    const url = `https://localhost:7127/User/draw/${user.id}`
 
     try {
         const response = await fetch(url);
@@ -30,7 +32,7 @@ const Swipes = ({user}) => {
   };
 
   const fetchLikesData = async () => {
-    const url = `https://localhost:44304/User/getLikedMe/${user.id}`
+    const url = `https://localhost:7127/User/getLikedMe/${user.id}`
 
     try {
         const response = await fetch(url);
@@ -52,10 +54,10 @@ const Swipes = ({user}) => {
   }, []);
 
   const handleLike = async (currentPerson) => {
-    const url = `https://localhost:44304/api/Like/like/${user.id}/${currentPerson.id}`
+    const url = `https://localhost:7127/api/Like/like/${user.id}/${currentPerson.id}`
     try {
         const response = await fetch(url, {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "text/json",
         },
@@ -75,7 +77,7 @@ const Swipes = ({user}) => {
   };
 
   const handleDislike = async (currentPerson) => {
-    const url = `https://localhost:44304/api/Like/disLike/${user.id}/${currentPerson.id}`
+    const url = `https://localhost:7127/api/Like/disLike/${user.id}/${currentPerson.id}`
 
     try {
         const response = await fetch(url, {method: "GET"});
@@ -121,14 +123,54 @@ const Swipes = ({user}) => {
   return (
     <div className="tinder-cards">
         {showMatchModal && (
-        <div className="modal">
-            <div className="modal-content">
-                <h2>It's a Match!</h2>
-                <p>You matched with {previousPerson.firstName}</p>
-                <p>Catch up on instagram: {igLinkToDisplay}</p>
-                <button onClick={handleCloseModal}>Close</button>
-            </div>
-            </div>
+      <Dialog header="It's a match!" visible={showMatchModal} style={{ width: '50vw' }} modal onHide={() => {setShowMatchModal(false)}}>
+      <div className="match-info">
+        <div className="match-info__general">
+          <img src={previousPerson?.photo} />
+          <div className="match-info__general__text">
+            <div className="match-info__general__text__name">{previousPerson?.firstName}</div>
+            <div className="match-info__general__text__bio">{previousPerson?.aboutMe}</div>
+          </div>
+        </div>
+        <div className="match-info__icon-container">
+          <div className="match-info__icon-container__item">
+            <i className="pi pi-heart"></i>
+            {previousPerson?.sex === 2 && "Male"}
+            {previousPerson?.sex === 1 && "Female"}
+            {previousPerson?.sex === 3 && "Other"}
+          </div>
+          <div className="match-info__icon-container__item">
+            <i className="pi pi-home"></i>
+            {previousPerson?.city}
+          </div>
+          <div className="match-info__icon-container__item">
+            <i className="pi pi-arrow-up"></i>
+            {previousPerson?.height} cm
+          </div>
+        </div>
+        <div className="match-info__icon-container" style={{gridTemplateColumns:'1fr 1fr'}}>
+        <div className="match-info__icon-container__item">
+            <i className="pi pi-book"></i>
+            {previousPerson?.education}
+          </div>
+          <div className="match-info__icon-container__item">
+            <i className="pi pi-money-bill"></i>
+            {previousPerson?.job}
+          </div>
+        </div>
+        <div className="match-info__icon-container" style={{gridTemplateColumns:'1fr 1fr'}}>
+          <div className="match-info__icon-container__item">
+            <i className="pi pi-facebook"></i>
+            <a href={previousPerson?.facebookLink}>{previousPerson?.facebookLink}</a>
+
+          </div>
+          <div className="match-info__icon-container__item">
+            <i className="pi pi-instagram"></i>
+            <a href={previousPerson?.instagramLink}>{previousPerson?.instagramLink}</a>
+          </div>
+        </div>
+      </div>
+    </Dialog>
       )}
       <div className="card">
         <img className="card-image" src={currentPerson.photo} alt={currentPerson.firstName} />
