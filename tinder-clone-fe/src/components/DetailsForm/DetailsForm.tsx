@@ -4,8 +4,9 @@ import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { classNames } from 'primereact/utils';
-import { CreateUserDto, User } from '../../model';
+import { CreateUserDto, User, UpdateUserDto } from '../../model';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { Dropdown } from 'primereact/dropdown';
 import { updateUser } from '../../DataService';
 import { formatDate } from '../../utils';
 
@@ -16,12 +17,12 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
     user: User;
     readonly: boolean;
 }) => {
-    const [cUser, setCuser] = useState({
+    const [cUser, setCuser] = useState<UpdateUserDto>({
         mail: user.mail,
         password: user.password,
         firstName: user.firstName,
         birthDate: formatDate(user.birthDate),
-        sex: user.sex,
+        sex: user.sex.toString(),
         city: user.city,
         aboutMe: user.aboutMe,
         height: user.height,
@@ -30,9 +31,9 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
         photo: user.photo,
         facebookLink: user.facebookLink,
         instagramLink: user.instagramLink,
-        showingGender: user.showingGender,
+        showingGender: user.showingGender.toString(),
     });
-    const defaultValues: CreateUserDto = cUser;
+    const defaultValues: UpdateUserDto = cUser;
 
     const toast = React.useRef(null);
 
@@ -40,9 +41,10 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
         control,
         formState: { errors },
         handleSubmit,
+        register,
     } = useForm({ defaultValues });
 
-    const onSubmit = async (data: CreateUserDto) => {
+    const onSubmit = async (data: UpdateUserDto) => {
         console.log(data);
         try {
             toast!.current!.show({
@@ -50,11 +52,15 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
                 summary: 'Updating',
                 detail: 'Updating user data',
             });
-            await updateUser(`${user.id}`, data);
+            await updateUser(`${user.id}`, {
+                ...data,
+                sex: parseInt(data.sex),
+                showingGender: parseInt(data.showingGender),
+            });
             await setCuser(data);
             await sessionStorage.setItem('user', JSON.stringify(data));
             await toast!.current!.clear();
-            toast!.current!.show({
+            await toast!.current!.show({
                 severity: 'success',
                 summary: 'Success',
                 detail: 'Updatinging successfull',
@@ -80,6 +86,17 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
             <small className="p-error">&nbsp;</small>
         );
     };
+
+    const genderOptions = [
+        { name: 'Female', value: '0' },
+        { name: 'Male', value: '1' },
+    ];
+
+    const showingGenderOptions = [
+        { name: 'Female', value: '0' },
+        { name: 'Male', value: '1' },
+        { name: 'Both', value: '2' },
+    ];
 
     return (
         <div className="card flex justify-content-center mt-4">
@@ -181,6 +198,62 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
                                     autoResize
                                 />
                                 <label htmlFor={field.name}>About me</label>
+                            </span>
+                            {getFormErrorMessage(field.name)}
+                        </>
+                    )}
+                />
+                {/* gender */}
+                <Controller
+                    name="sex"
+                    control={control}
+                    rules={{ required: 'Sex is required.' }}
+                    render={({ field, fieldState }) => (
+                        <>
+                            <label
+                                htmlFor={field.name}
+                                className={classNames({ 'p-error': errors.sex })}
+                            ></label>
+                            <span className="p-float-label">
+                                <Dropdown
+                                    type="number"
+                                    id={field.name}
+                                    value={field.value}
+                                    className={classNames({ 'p-invalid': fieldState.error, 'w-12': true })}
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    disabled={readonly}
+                                    options={genderOptions}
+                                    optionLabel="name"
+                                />
+                                <label htmlFor={field.name}>Sex</label>
+                            </span>
+                            {getFormErrorMessage(field.name)}
+                        </>
+                    )}
+                />
+                {/* showing gender */}
+                <Controller
+                    name="showingGender"
+                    control={control}
+                    rules={{ required: 'Prefenrences is required.' }}
+                    render={({ field, fieldState }) => (
+                        <>
+                            <label
+                                htmlFor={field.name}
+                                className={classNames({ 'p-error': errors.showingGender })}
+                            ></label>
+                            <span className="p-float-label">
+                                <Dropdown
+                                    type="number"
+                                    id={field.name}
+                                    value={field.value}
+                                    className={classNames({ 'p-invalid': fieldState.error, 'w-12': true })}
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    disabled={readonly}
+                                    options={showingGenderOptions}
+                                    optionLabel="name"
+                                />
+                                <label htmlFor={field.name}>Preferences</label>
                             </span>
                             {getFormErrorMessage(field.name)}
                         </>

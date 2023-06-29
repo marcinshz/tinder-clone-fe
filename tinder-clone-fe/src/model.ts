@@ -48,6 +48,23 @@ export interface CreateUserDto {
     showingGender: number;
 }
 
+export interface UpdateUserDto {
+    mail: string;
+    password: string;
+    firstName: string;
+    birthDate: string;
+    sex: string;
+    city: string;
+    aboutMe: string;
+    height: number;
+    education: string;
+    job: string;
+    photo: string;
+    facebookLink: string;
+    instagramLink: string;
+    showingGender: string;
+}
+
 export interface Liked {
     idLikedBy: number;
     idLikedWhom: number;
