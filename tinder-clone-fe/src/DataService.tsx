@@ -26,7 +26,7 @@ export async function login(mail: string, password: string): Promise<User | null
         return res.text()
     })
         .then(async (data: string) => {
-            if (data!=="Invalid credential") return await getUser(data);
+            if (data!=="Invalid credentials") return await getUser(data);
             return null;
         })
 }
