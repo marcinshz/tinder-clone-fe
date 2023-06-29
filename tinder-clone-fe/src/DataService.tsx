@@ -1,7 +1,7 @@
 import { usersList } from "./demodata";
 import { CreateUserDto, Match, User } from "./model";
 
-const api_url = 'https://localhost:44304/';
+const api_url = 'https://localhost:7127/';
 
 export async function register(userData: CreateUserDto): Promise<boolean> {
     // dodać fetch jak będzie api

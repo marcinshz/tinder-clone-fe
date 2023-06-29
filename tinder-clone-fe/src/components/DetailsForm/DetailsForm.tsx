@@ -98,7 +98,7 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
 
     return (
         <div className="card flex justify-content-center mt-4">
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-column gap-2 w-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-column gap-2 w-10">
                 <Toast ref={toast} />
                 {/* name */}
                 <Controller
@@ -307,7 +307,7 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
                         </>
                     )}
                 />
-                {!readonly && <Button label="Submit" type="submit" icon="pi pi-check" />}
+                {!readonly && <Button className="mb-4" label="Submit" type="submit" icon="pi pi-check" />}
             </form>
         </div>
     );

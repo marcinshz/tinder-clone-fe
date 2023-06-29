@@ -23,7 +23,9 @@ const Profile: React.FC<ProfileProps> = ({ user }: { user: User }) => {
                     onClick={toggleReadOnly}
                 />
             </div>
-            <DetailsForm user={user} readonly={readonly} />
+            <div className="w-12 flex justify-content-center mt-4">
+                <DetailsForm user={user} readonly={readonly} />
+            </div>
         </div>
     );
 };
