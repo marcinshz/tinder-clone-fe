@@ -12,6 +12,7 @@ const Swipes = ({user}) => {
   const [currentPersonIndex, setCurrentPersonIndex] = useState(0);
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [igLinkToDisplay, setIgLinkToDislplay] = useState('')
+  const [fbLinkToDisplay, setFbLinkToDislplay] = useState('')
 
   // Przykładowa funkcja do pobierania danych z serwera
   const fetchDrawData = async () => {
@@ -70,6 +71,7 @@ const Swipes = ({user}) => {
         if (person.id === currentPerson.id){
             setShowMatchModal(true)
             setIgLinkToDislplay(person.instagramLink)
+            setFbLinkToDislplay(person.facebookLink)
         }
     })
     
@@ -161,12 +163,11 @@ const Swipes = ({user}) => {
         <div className="match-info__icon-container" style={{gridTemplateColumns:'1fr 1fr'}}>
           <div className="match-info__icon-container__item">
             <i className="pi pi-facebook"></i>
-            <a href={previousPerson?.facebookLink}>{previousPerson?.facebookLink}</a>
-
+            <a href={fbLinkToDisplay}>{fbLinkToDisplay}</a>
           </div>
           <div className="match-info__icon-container__item">
             <i className="pi pi-instagram"></i>
-            <a href={previousPerson?.instagramLink}>{previousPerson?.instagramLink}</a>
+            <a href={igLinkToDisplay}>{igLinkToDisplay}</a>
           </div>
         </div>
       </div>
