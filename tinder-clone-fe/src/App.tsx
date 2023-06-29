@@ -13,16 +13,15 @@ function App() {
     const [user, setUser] = useState<User>();
     useEffect(() => {
         if (user) {
-            let tmp = sessionStorage.getItem("user");
-            if (!tmp) sessionStorage.setItem("user", JSON.stringify(user))
-        }
-        else {
-            let tmp = sessionStorage.getItem("user");
+            let tmp = sessionStorage.getItem('user');
+            if (!tmp) sessionStorage.setItem('user', JSON.stringify(user));
+        } else {
+            let tmp = sessionStorage.getItem('user');
             if (tmp) {
                 setUser(JSON.parse(tmp));
             }
         }
-    }, [user])
+    }, [user]);
 
     return (
         <BrowserRouter>

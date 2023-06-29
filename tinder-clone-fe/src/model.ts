@@ -1,7 +1,12 @@
 export enum Gender {
-    MALE = 'Male',
-    FEMALE = 'Female',
-    Other = 'Other'
+    Female = '0',
+    Male = '1'
+}
+
+export enum Preferences {
+    Female = '0',
+    Male = '1',
+    Both = '2'
 }
 
 export interface User {
@@ -12,17 +17,17 @@ export interface User {
     birthDate: Date;
     sex: number;
     city: string;
-    aboutMe?: string;
+    aboutMe: string;
     height: number;
-    education?: string;
-    job?: string;
+    education: string;
+    job: string;
     photo: string;
     facebookLink?: string;
     instagramLink?: string;
     showingGender: number;
 };
 
-export interface CreateUserDto{
+export interface CreateUserDto {
     mail: string;
     password: string;
     firstName: string;
@@ -52,6 +57,23 @@ export interface Match{
     photo: string;
     facebookLink: string;
     instagramLink: string;
+}
+
+export interface UpdateUserDto {
+    mail: string;
+    password: string;
+    firstName: string;
+    birthDate: string;
+    sex: string;
+    city: string;
+    aboutMe: string;
+    height: number;
+    education: string;
+    job: string;
+    photo: string;
+    facebookLink: string;
+    instagramLink: string;
+    showingGender: string;
 }
 
 export interface Liked {
