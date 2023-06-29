@@ -1,5 +1,5 @@
 import { usersList } from "./demodata";
-import { CreateUserDto, User } from "./model";
+import { CreateUserDto, Match, User } from "./model";
 
 const api_url = 'http://localhost:5257/'
 
@@ -49,5 +49,14 @@ export async function uploadImage(img:string | ArrayBuffer){
     }).then((data) => {
         return data.data.display_url
     })
-    
+}
+
+export async function getMatches(userId:string):Promise<Match[]>{
+    return await fetch(api_url+`User/${userId}/matches`,{
+        method:'GET'
+    }).then((res) => {
+        return res.json()
+    }).then((data) => {
+        return data;
+    })
 }
