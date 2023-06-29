@@ -31,17 +31,14 @@ export default function RegisterPage(props: { setUser: Function; user: User | un
     const [birthDate, setBirthDate] = useState<Date>();
     const [sex, setSex] = useState(-1);
     const [aboutMe, setAboutMe] = useState('');
-    //const [hobbies, setHobbies] = useState<string[]>()
-    const [height, setHeight] = useState<any>(-1);
-    const [education, setEducation] = useState('');
-    const [job, setJob] = useState('');
-    const [facebookLink, setFacebookLink] = useState('');
-    const [instagramLink, setInstagramLink] = useState('');
-    const [showingGender, setShowingGender] = useState(-1);
-    const [city, setCity] = useState('');
-    const [ageRange, setAgeRange] = useState<any>([18, 100]);
-    const [showingOnlyMyCity, setShowingOnlyMyCity] = useState(false);
-    const [step, setStep] = useState(0);
+    const [height, setHeight] = useState<any>(-1)
+    const [education, setEducation] = useState("")
+    const [job, setJob] = useState("")
+    const [facebookLink, setFacebookLink] = useState("")
+    const [instagramLink, setInstagramLink] = useState("")
+    const [showingGender, setShowingGender] = useState(-1)
+    const [city, setCity] = useState("")
+    const [step, setStep] = useState(0)
     const [showError, setShowError] = useState<boolean>(false);
     const navigate = useNavigate();
 
@@ -72,10 +69,9 @@ export default function RegisterPage(props: { setUser: Function; user: User | un
                 }
                 break;
             case 3:
-                if (showingGender !== -1 && ageRange && birthDate) {
-                    console.log(showingGender);
-                    setShowError(false);
-
+                if (showingGender!==-1 && birthDate) {
+                    console.log(showingGender)
+                    setShowError(false)
                     const userData = {
                         mail,
                         password,
@@ -90,11 +86,8 @@ export default function RegisterPage(props: { setUser: Function; user: User | un
                         photo,
                         facebookLink,
                         instagramLink,
-                        showingGender,
-                        ageRangeMin: ageRange[0],
-                        ageRangeMax: ageRange[1],
-                        showingOnlyMyCity,
-                    };
+                        showingGender
+                    }
 
                     const user = await register(userData).then(async (data: boolean) => {
                         if (data) {
@@ -126,8 +119,7 @@ export default function RegisterPage(props: { setUser: Function; user: User | un
             const base64data = reader.result;
             if (base64data) {
                 const url = await uploadImage(base64data);
-                console.log('url img', url);
-                if (url) setPhoto(url);
+                if(url) setPhoto(url);
             }
         };
     };
@@ -277,35 +269,6 @@ export default function RegisterPage(props: { setUser: Function; user: User | un
                                 checked={showingGender === 0}
                             />
                             <label htmlFor="female">Female</label>
-                        </div>
-                        <div className="register-page__form-container__input-container">
-                            <label htmlFor="age-range">Age range</label>
-                            <div className="register-page__form-container__input-container__slider-container">
-                                <div className="register-page__form-container__input-container__slider-container__value">
-                                    {ageRange[0]}
-                                </div>
-                                <Slider
-                                    value={ageRange}
-                                    onChange={(e) => setAgeRange(e.value)}
-                                    range
-                                    className="w-14rem"
-                                    id="age-range"
-                                    min={18}
-                                />
-                                <div className="register-page__form-container__input-container__slider-container__value">
-                                    {ageRange[1]}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="register-page__form-container__input-container">
-                            <label htmlFor="my-city-only">Only your city?</label>
-                            <Checkbox
-                                id="my-city-only"
-                                onChange={(e) => {
-                                    if (e.checked !== undefined) setShowingOnlyMyCity(e.checked);
-                                }}
-                                checked={showingOnlyMyCity}
-                            />
                         </div>
                     </>
                 )}

@@ -9,7 +9,6 @@ export enum Preferences {
     Both = '2'
 }
 
-// TODO replace hobbies with Array<Hobby> and sex, showingGender with gender
 export interface User {
     id: number;
     mail: string;
