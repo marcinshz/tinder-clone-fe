@@ -6,23 +6,22 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import Homepage from './pages/Homepage/Homepage';
 import Profile from './pages/Profile/Profile';
-import SwipingArea from './pages/SwipingArea/SwipingArea'
+import SwipingArea from './pages/SwipingArea/SwipingArea';
 
 function App() {
     const [user, setUser] = useState<User>();
     useEffect(() => {
-        console.log('user',user)
+        console.log('user', user);
         if (user) {
-            let tmp = sessionStorage.getItem("user");
-            if (!tmp) sessionStorage.setItem("user", JSON.stringify(user))
-        }
-        else {
-            let tmp = sessionStorage.getItem("user");
+            let tmp = sessionStorage.getItem('user');
+            if (!tmp) sessionStorage.setItem('user', JSON.stringify(user));
+        } else {
+            let tmp = sessionStorage.getItem('user');
             if (tmp) {
                 setUser(JSON.parse(tmp));
             }
         }
-    }, [user])
+    }, [user]);
 
     return (
         <BrowserRouter>
