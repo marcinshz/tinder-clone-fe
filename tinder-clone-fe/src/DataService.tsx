@@ -42,7 +42,10 @@ export async function getUser(id: string): Promise<User> {
 
 export async function updateUser(id: string, user: CreateUserDto): Promise<User> {
     return await fetch(`${api_url}User/${id}`, {
-        method: 'POST',
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
         body: JSON.stringify(user),
     })
         .then((res) => res.json())

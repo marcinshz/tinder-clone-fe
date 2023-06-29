@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
@@ -28,32 +28,23 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
     readonly: boolean;
 }) => {
     const defaultValues: CreateUserDto = {
-        firstName: user.firstName,
-        sex: user.sex,
-        showingGender: user.showingGender,
-        aboutMe: user.aboutMe,
-        city: user.city,
-        education: user.education,
-        facebookLink: user.facebookLink,
-        instagramLink: user.instagramLink,
         mail: user.mail,
         password: user.password,
-        birthDate: 'some date',
+        firstName: user.firstName,
+        birthDate: formatDate(user.birthDate),
+        sex: user.sex,
+        city: user.city,
+        aboutMe: user.aboutMe,
         height: user.height,
+        education: user.education,
         job: user.job,
         photo: user.photo,
-        ageRangeMax: user.ageRangeMax,
-        ageRangeMin: user.ageRangeMin,
-        showingOnlyMyCity: user.showOnlyMyCity,
+        facebookLink: user.facebookLink,
+        instagramLink: user.instagramLink,
+        showingGender: user.showingGender,
     };
 
     const toast = React.useRef(null);
-    const [updatedUser, setUpdatedUser] = useState<CreateUserDto>(defaultValues);
-
-    const show = () => {
-        //@ts-ignore
-        toast.current.show({ severity: 'success', summary: 'User updated.' });
-    };
 
     const {
         control,
@@ -69,9 +60,8 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
                 summary: 'Updating',
                 detail: 'Updating user data',
             });
-            await setUpdatedUser(data);
-            console.log(updatedUser);
-            await updateUser(`${user.id}`, updatedUser);
+            await updateUser(`${user.id}`, data);
+            console.log('data:', data);
             await toast!.current!.clear();
             toast!.current!.show({
                 severity: 'success',
@@ -99,6 +89,7 @@ const DetailsForm: React.FC<{ user: User; readonly: boolean }> = ({
             <small className="p-error">&nbsp;</small>
         );
     };
+
     return (
         <div className="card flex justify-content-center mt-4">
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-column gap-2 w-4">

@@ -3,7 +3,8 @@ export function padTo2Digits(num: number) {
 }
 
 export function formatDate(date: Date) {
-    return [date.getFullYear(), padTo2Digits(date.getMonth() + 1), padTo2Digits(date.getDate())].join(
+    const newDate = new Date(date);
+    return [newDate.getFullYear(), padTo2Digits(newDate.getMonth() + 1), padTo2Digits(newDate.getDate())].join(
         '-'
     );
 }

@@ -23,8 +23,8 @@ export interface User {
     education: string;
     job: string;
     photo: string;
-    facebookLink?: string;
-    instagramLink?: string;
+    facebookLink: string;
+    instagramLink: string;
     showingGender: number;
     ageRangeMin: number;
     ageRangeMax: number;
@@ -46,9 +46,6 @@ export interface CreateUserDto {
     facebookLink: string;
     instagramLink: string;
     showingGender: number;
-    ageRangeMin: number;
-    ageRangeMax: number;
-    showingOnlyMyCity: boolean;
 }
 
 export interface Liked {
